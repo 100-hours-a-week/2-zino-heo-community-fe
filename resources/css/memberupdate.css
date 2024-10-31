@@ -1,36 +1,53 @@
-.header {
-  display: flex; /* Flexbox 사용 */
-  align-items: center; /* 세로 중앙 정렬 */
-  justify-content: space-between; /* 좌우 정렬 */
-  padding: 10px 20px; /* 패딩 */
-  background-color: #f9f9f9; /* 배경색 */
-  border-bottom: 1px solid #ccc; /* 하단 테두리 */
-  position: relative; /* 드롭다운을 위한 상대 위치 설정 */
+body {
+  margin: 0;
+  background-color: #ffffff;
 }
 
-.logo {
-  flex-grow: 1; /* 남은 공간 차지 */
-  text-align: center; /* 중앙 정렬 */
-  font-size: 24px; /* 글자 크기 */
-  margin: 0; /* 여백 제거 */
+.container {
+  display: flex;
+  flex-direction: column; /* 세로 방향으로 정렬 */
+  align-items: center; /* 중앙 정렬 */
+  padding: 20px;
+}
+
+.header {
+  display: flex; /* Flexbox 사용 */
+  justify-content: center; /* 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  padding: 10px;
+  height: 104px;
+  max-width: 1920px;
+  width: 100%;
+  border-bottom: 1px solid;
+  position: relative; /* 자식 요소의 절대 위치를 위해 상대 위치 설정 */
+}
+
+header .h1 {
+  font-family: 'Sandoll GogoRound';
+  margin: 0;
+  font-size: 32px;
+  line-height: 32px;
+  position: absolute; /* 절대 위치 설정 */
+  left: 50%; /* 중앙 정렬을 위한 위치 */
+  transform: translateX(-50%); /* 요소의 너비의 절반만큼 왼쪽으로 이동 */
 }
 
 .profile-pic {
-  width: 36px; /* 프로필 이미지 크기 */
-  height: 36px; /* 프로필 이미지 크기 */
-  border-radius: 50%; /* 원형으로 만들기 */
-  background-color: #ccc; /* 기본 색상 */
-  margin-left: -150px; /* 오른쪽 여백 조정 */
-  margin-right: 130px; /* 오른쪽 여백 조정 */
-  cursor: pointer; /* 클릭 가능하도록 커서 변경 */
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin-left: 10px; /* 좌측 여백 추가 */
+  position: absolute; /* 절대 위치 설정 */
+  left: 77%; /* 정확한 위치 설정 */
 }
 
 /* 드롭다운 메뉴 스타일링 */
 .dropdown-menu {
   display: none; /* 기본적으로 드롭다운 숨김 */
   position: absolute; /* 드롭다운을 헤더 아래에 위치시킴 */
-  left: calc(100% - 300px); /* 프로필 사진의 오른쪽 끝에서 시작 */
-  top: 45px; /* 헤더 아래에 위치 */
+  left: calc(100% - 845px); /* 프로필 사진의 오른쪽 끝에서 시작 */
+  top: 80px; /* 헤더 아래에 위치 */
   background-color: white; /* 배경색 */
   border-radius: 5px; /* 모서리 둥글게 */
   z-index: 100; /* 다른 요소 위에 표시 */
@@ -109,6 +126,10 @@ h2 {
 .form-group {
   width: 100%; /* 전체 너비 */
   margin-bottom: 15px; /* 그룹 간격 */
+}
+
+#nickname {
+  width: 95%;
 }
 
 .form-group label {

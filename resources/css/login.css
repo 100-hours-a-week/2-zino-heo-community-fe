@@ -79,6 +79,7 @@ small {
 
 .signup-link a {
   text-decoration: none; /* 밑줄 제거 */
+  color: black;
   font-size: 14px;
   margin-left: 11px;
 }
