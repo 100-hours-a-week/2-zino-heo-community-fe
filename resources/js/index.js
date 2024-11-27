@@ -1,17 +1,67 @@
 document.getElementById('create_post').addEventListener('click', function () {
-  window.location.href = '../../views/posting/createpost.html'; // board.html로 이동
+  window.location.href = '../../views/posting/createpost.html';
 });
 
-document.getElementById('post_detail').addEventListener('click', function () {
-  window.location.href = '../../views/posting/board.html'; // board.html로 이동
-});
+//document.getElementById('post_detail').addEventListener('click', function () {
+//window.location.href = '../../views/posting/board.html';
+//});
 
 // 초기 값 설정
-const initialLikes = 1500;
-const initialComments = 2500;
-const initialViews = 120000;
-const postTitle =
-  '이것은 제목이 너무 긴 경우를 테스트하기 위한 예제 제목입니다.'; // 긴 제목 예제
+const postContainer = document.getElementById('postContainer'); // 게시물 리스트를 담을 컨테이너
+
+// 게시물 목록 가져오기
+function loadPosts() {
+  fetch('http://localhost:3000/api/board') // 게시물 목록 API 호출
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('게시물 목록을 가져오는 중 오류가 발생했습니다.');
+      }
+      return response.json();
+    })
+    .then((posts) => {
+      console.log(posts); // 데이터 확인
+      displayPosts(posts); // 게시물 표시
+    })
+    .catch((error) => {
+      console.error(error.message);
+      alert('게시물 목록을 불러오는 데 실패했습니다.');
+    });
+}
+
+// 게시물 표시 함수
+function displayPosts(posts) {
+  postContainer.innerHTML = ''; // 기존 게시물 목록 초기화
+
+  posts.forEach((post) => {
+    const profileImageUrl = post.author.profileImage.startsWith('http')
+      ? post.author.profileImage
+      : `http://localhost:3000/${post.author.profileImage}`; // URL 수정
+
+    const postElement = document.createElement('div');
+    postElement.classList.add('posting');
+    postElement.innerHTML = `
+      <div class="post" id="post_${post.id}">
+        <h2 class="post-title">${post.title}</h2>
+        <div class="post-info">
+          <div class="post-info-left">
+            <span>좋아요 ${formatNumber(post.likes)}</span>
+            <span>조회수 ${formatNumber(post.views)}</span>
+            <span>댓글 ${post.comments.length || 0}</span>
+          </div>
+          <div class="post-info-right">
+            <span>${formatDate(post.createdAt)}</span> <!-- 날짜 포맷 -->
+          </div>
+        </div>
+        <div class="separator"></div>
+        <div class="post-author">
+          <div class="author-pic" style="background-image: url('${profileImageUrl}'); width: 40px; height: 40px; background-size: cover; border-radius: 50%;"></div>
+          <span>${post.author.nickname}</span>
+        </div>
+      </div>
+    `;
+    postContainer.appendChild(postElement); // 게시물 추가
+  });
+}
 
 // 숫자를 K 형식으로 변환하는 함수
 function formatNumber(num) {
@@ -26,37 +76,28 @@ function formatNumber(num) {
 }
 
 // 날짜를 yyyy-mm-dd hh:mm:ss 형식으로 변환하는 함수
-function formatDate(date) {
+function formatDate(dateString) {
+  const date = new Date(dateString);
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
   const day = String(date.getDate()).padStart(2, '0');
   const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
   const seconds = String(date.getSeconds()).padStart(2, '0');
+
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-// DOM 요소 선택
-const likesElement = document.getElementById('likes');
-const commentsElement = document.getElementById('comments');
-const viewsElement = document.getElementById('views');
-const postDateElement = document.getElementById('postDate');
-const postTitleElement = document.getElementById('postTitle');
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('DOMContentLoaded 이벤트 발생'); // 로그 추가
 
-// 값 설정 및 형식 변환
-likesElement.textContent = '좋아요 ' + formatNumber(initialLikes);
-commentsElement.textContent = '댓글 ' + formatNumber(initialComments);
-viewsElement.textContent = '조회수 ' + formatNumber(initialViews);
-
-/*
-// 현재 날짜와 시간을 설정
-const currentDate = new Date();
-postDateElement.textContent = formatDate(currentDate);
-*/
-
-// 제목 설정 및 26자 제한 처리
-if (postTitle.length > 26) {
-  postTitleElement.textContent = postTitle.slice(0, 26) + '...'; // 26자 이상일 경우 '...' 추가
-} else {
-  postTitleElement.textContent = postTitle; // 26자 이하일 경우 그대로 표시
-}
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    window.location.href = '../../views/member/login.html'; // 로그인 페이지로 이동
+  } else {
+    document.getElementById(
+      'welcomeMessage'
+    ).textContent = `환영합니다, ${user.nickname}님!`;
+    loadPosts(); // 게시물 목록 가져오기
+  }
+});

@@ -22,6 +22,7 @@ body {
 }
 
 .login-section {
+  margin-top: 7%;
   display: flex;
   flex-direction: column; /* 세로 방향으로 정렬 */
   justify-content: center; /* 중앙 정렬 */
@@ -53,10 +54,6 @@ body {
   border-radius: 5px; /* 모서리 둥글게 */
 }
 
-small {
-  color: red;
-}
-
 .login-btn {
   background-color: #ACA0EB; /* 버튼 배경색 */
   color: white; /* 글자색 */
@@ -69,10 +66,6 @@ small {
   margin-left: 11px;
 }
 
-.login-btn:hover {
-  background-color: #45a049; /* 호버 시 색상 변경 */
-}
-
 .signup-link {
   margin-top: 10px; /* 위쪽 여백 */
 }
@@ -82,4 +75,12 @@ small {
   color: black;
   font-size: 14px;
   margin-left: 11px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8em;
+  display: block;
+  margin-top: 5px;
+  width: 400px;
 }

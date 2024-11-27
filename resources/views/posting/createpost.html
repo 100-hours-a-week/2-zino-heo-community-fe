@@ -1,43 +1,51 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/createpost.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/header.css" />
+    <link rel="stylesheet" href="/css/createpost.css" />
     <title>게시글 작성</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <header class="header">
-            <button class="back-button">&lt;</button> <!-- 뒤로가기 버튼 -->
-            <h1 class="logo">아무 말 대잔치</h1> <!-- 로고 -->
-            <div class="profile-pic"></div> <!-- 프로필 이미지 -->
-        </header>
-        <main class="main-section">
-            <h2 class="title">게시글 작성</h2>
-            
-            <div class="form-group">
-                <label for="title">제목*</label>
-                <input type="text" id="title" placeholder="제목을 입력해 주세요. (최대 26글자)">
-            </div>
-            
-            <div class="form-group">
-                <label for="content">내용*</label>
-                <textarea id="content" placeholder="내용을 입력해 주세요."></textarea>
-                <small>* helper text</small>
-            </div>
-            
-            <div class="form-group">
-                <label for="image">이미지</label>
-                <div class="file-upload">
-                    <button class="upload-button">파일 선택</button>
-                    <span class="file-text">파일을 선택해 주세요.</span>
-                </div>
-            </div>
-            
-            <button class="submit-button">완료</button>
-        </main>
-        
+      <div id="header-container"></div>
+      <div class="main-section">
+        <h2 class="title">게시글 작성</h2>
+
+        <div class="form-group">
+          <label for="title">제목*</label>
+          <input
+            type="text"
+            id="title"
+            placeholder="제목을 입력해 주세요. (최대 26글자)"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="content">내용*</label>
+          <textarea id="content" placeholder="내용을 입력해 주세요."></textarea>
+          <small id="helper-text" style="color: red"
+            >* 제목, 내용을 모두 입력해주세요.</small
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="image">이미지</label>
+          <input
+            type="file"
+            id="image"
+            accept="image/*"
+            style="display: none"
+          />
+          <button type="button" class="upload-button">파일 선택</button>
+          <span class="file-text">파일을 선택해 주세요.</span>
+        </div>
+
+        <button class="submit-button">완료</button>
+      </div>
     </div>
-</body>
+    <script src="../../js/header.js" defer></script>
+    <script src="../../js/createpost.js" defer></script>
+  </body>
 </html>
