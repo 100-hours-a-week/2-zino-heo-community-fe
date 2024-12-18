@@ -1,0 +1,112 @@
+body {
+  margin: 0;
+  background-color: #ffffff;
+}
+
+.container {
+  display: flex;
+  flex-direction: column; /* 세로 방향으로 정렬 */
+  align-items: center; /* 중앙 정렬 */
+  padding: 20px;
+}
+
+.notice {
+  max-width: 1920px; /* 올바른 너비 설정 */
+  width: 100%;
+  height: 100px; /* 높이를 조정하여 공간 확보 */
+  margin-top: 50px; /* 상단 여백 추가 */
+  display: flex; /* 내용 정렬을 위해 flex 사용 */
+  flex-direction: column; /* 세로 방향으로 정렬 */
+  align-items: center; /* 중앙 정렬 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  font-size: 18px; /* 글자 크기 조정 (예시) */
+  position: relative; /* 버튼의 절대 위치를 위해 상대 위치 설정 */
+}
+
+.notice p {
+  margin: 0; /* p 태그의 기본 여백 제거 */
+}
+
+.post_btn {
+  background-color: #ACA0EB; /* 버튼 배경색 */
+  color: white; /* 글자색 */
+  border: none; /* 테두리 없애기 */
+  border-radius: 16px; /* 모서리 둥글게 */
+  padding: 10px 15px; /* 패딩 */
+  cursor: pointer; /* 커서 변경 */
+  position: absolute;
+  top: 47px;
+  transform: translateY(100%); /* 수직 중앙 정렬 */
+  transform: translateX(285%); /* 수직 중앙 정렬 */
+  margin-top: 20px;
+}
+
+.post_btn:hover {
+  background-color: #7F6AEE; /* 호버 시 색상 변경 */
+}
+
+.posting {
+  width: 592px; /* 전체 너비 설정 */
+  height: 169px; /* 전체 높이 설정 */
+  margin-top: 10px; /* 버튼과의 간격 */
+  padding: 10px; /* 내부 여백 */
+  background-color: #ffffff; /* 배경색 */
+  border: 1px solid #ccc; /* 테두리 */
+  border-radius: 16px; /* 모서리 둥글게 */
+  display: flex; /* Flexbox 사용 */
+  flex-direction: column; /* 세로 방향으로 정렬 */
+}
+
+.post {
+  flex-grow: 1; /* 남은 공간을 차지하도록 설정 */
+  display: flex; /* Flexbox 사용 */
+  flex-direction: column; /* 세로 방향으로 정렬 */
+}
+
+.post-title {
+  font-size: 20px; /* 제목 크기 */
+  margin-top: 10px; /* 여백 제거 */
+  margin-left: 10px;
+}
+
+.post-info {
+  display: flex; /* Flexbox 사용 */
+  justify-content: space-between; /* 좌우 공간 분배 */
+  font-size: 14px; /* 정보 크기 */
+  color: #666; /* 정보 색상 */
+  margin: 5px 0; /* 여백 */
+}
+
+.post-info-left {
+  margin-left: 10px;
+  display: flex; /* Flexbox 사용 */
+  gap: 10px; /* 요소 간격 */
+}
+
+.post-info-right {
+  margin-left: auto; /* 오른쪽으로 밀어넣기 */
+}
+
+.separator {
+  height: 1px; /* 구분선 높이 */
+  background-color: #e0e0e0; /* 구분선 색상 */
+  margin: 10px 0; /* 여백 */
+}
+
+.post-author {
+  display: flex; /* Flexbox 사용 */
+  align-items: center; /* 세로 중앙 정렬 */
+  line-height: 50px; /* 높이에 맞게 세로 중앙 정렬 */
+  height: 50px; /* 높이를 설정하여 중앙 정렬 */
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.author-pic {
+  width: 40px; /* 프로필 이미지 크기 */
+  height: 40px; /* 프로필 이미지 크기 */
+  border-radius: 50%; /* 원형으로 만들기 */
+  background-size: cover;
+  background-color: #ccc; /* 기본 배경색 */
+  margin-right: 10px; /* 오른쪽 여백 */
+}

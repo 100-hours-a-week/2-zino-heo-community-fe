@@ -1,0 +1,64 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  display: flex;
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+  z-index: 1000; /* 최상위 레이어 */
+}
+
+.modal {
+  width: 408px; /* 모달 너비 */
+  height: 242px; /* 모달 높이 */
+  background-color: white; /* 모달 배경색 */
+  border-radius: 8px; /* 모서리 둥글게 */
+  padding: 20px; /* 패딩 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  display: flex; /* Flexbox 사용 */
+  flex-direction: column; /* 세로 방향으로 정렬 */
+  justify-content: center; /* 수직 중앙 정렬 */
+}
+
+.modal h2 {
+  font-weight: bold; /* 제목 굵게 */
+  margin: 0; /* 여백 제거 */
+  font-size: 24px; /* 제목 크기 조정 */
+}
+
+.modal p {
+  margin: 10px 0 20px; /* 여백 조정 */
+  font-size: 16px; /* 내용 글자 크기 */
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center; /* 버튼을 중앙 정렬 */
+  width: 100%; /* 버튼 영역 너비 */
+  gap: 15px; /* 버튼 사이의 간격을 15px로 설정 */
+}
+
+.cancel-button,
+.confirm-button {
+  width: 127px; /* 버튼 너비 설정 */
+  height: 44px; /* 버튼 높이 설정 */
+  padding: 0; /* 패딩 제거 */
+  border: none; /* 테두리 없음 */
+  border-radius: 12px; /* 모서리 둥글게 */
+  cursor: pointer; /* 커서 포인터 */
+  font-size: 16px; /* 버튼 글자 크기 */
+}
+
+.cancel-button {
+  background-color: #333; /* 검은색 배경 */
+  color: white; /* 흰색 글자 */
+}
+
+.confirm-button {
+  background-color: #C4A5FA; /* 보라색 배경 */
+  color: black; /* 흰색 글자 */
+}
