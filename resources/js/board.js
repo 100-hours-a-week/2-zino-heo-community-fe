@@ -1,8 +1,3 @@
-require('dotenv').config();
-
-// 환경 변수에서 EC2 퍼블릭 IP 주소를 가져옴
-const EC2_PUBLIC_IP = process.env.EC2_PUBLIC_IP;
-
 document.addEventListener('DOMContentLoaded', async function () {
   let postId; // 전역 변수로 선언
   const commentInput = document.querySelector('.comment-input');
@@ -32,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       const urlParams = new URLSearchParams(window.location.search);
       postId = urlParams.get('postId'); // postId 가져오기
 
-      const response = await fetch(`${EC2_PUBLIC_IP}/api/board/${postId}`); // 백엔드 API 호출
+      const response = await fetch(`http://localhost:3000/api/board/${postId}`); // 백엔드 API 호출
       if (!response.ok) {
         throw new Error('게시물을 찾을 수 없습니다.');
       }
@@ -44,9 +39,9 @@ document.addEventListener('DOMContentLoaded', async function () {
       document.querySelector('.post-content').textContent = post.content;
       document.querySelector(
         '.post-image img'
-      ).src = `${EC2_PUBLIC_IP}/${post.image}`; // 게시물 이미지 경로
+      ).src = `http://localhost:3000/${post.image}`; // 게시물 이미지 경로
       const authorPic = document.querySelector('.author-pic');
-      authorPic.style.backgroundImage = `url(${EC2_PUBLIC_IP}/${post.author.profileImage})`; // 프로필 이미지 경로
+      authorPic.style.backgroundImage = `url(http://localhost:3000/${post.author.profileImage})`; // 프로필 이미지 경로
       document.querySelector('.author').textContent = post.author.nickname; // 작성자 닉네임 설정
       document.querySelector('.date').textContent = formatDate(
         new Date(post.createdAt)
@@ -90,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const email = JSON.parse(localStorage.getItem('user')).email;
         try {
           const response = await fetch(
-            `${EC2_PUBLIC_IP}/api/board/${postId}/like`,
+            `http://localhost:3000/api/board/${postId}/like`,
             {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
@@ -120,7 +115,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const commentItem = document.createElement('div');
     commentItem.classList.add('comment-item');
     commentItem.dataset.commentId = comment.id; // 댓글 ID 저장
-    const profileImageUrl = `${EC2_PUBLIC_IP}/${comment.author.profileImage}`;
+    const profileImageUrl = `http://localhost:3000/${comment.author.profileImage}`;
 
     // 현재 로그인한 사용자 정보 가져오기
     const currentUserEmail = JSON.parse(localStorage.getItem('user')).email;
@@ -177,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         // API 호출하여 댓글 수정
         try {
           const response = await fetch(
-            `${EC2_PUBLIC_IP}/api/board/${postId}/comments/${currentCommentId}`,
+            `http://localhost:3000/api/board/${postId}/comments/${currentCommentId}`,
             {
               method: 'PATCH',
               headers: { 'Content-Type': 'application/json' },
@@ -213,7 +208,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         // API 호출하여 댓글 추가
         try {
           const response = await fetch(
-            `${EC2_PUBLIC_IP}/api/board/${postId}/comments`,
+            `http://localhost:3000/api/board/${postId}/comments`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -257,7 +252,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   confirmPostDeleteButton.addEventListener('click', async function () {
     try {
       const response = await fetch(
-        `${EC2_PUBLIC_IP}/api/board/${postId}/delete`,
+        `http://localhost:3000/api/board/${postId}/delete`,
         {
           method: 'DELETE',
         }
@@ -287,7 +282,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       // API 호출하여 댓글 삭제
       try {
         const response = await fetch(
-          `${EC2_PUBLIC_IP}/api/board/${postId}/comments/${commentToDelete.id}`,
+          `http://localhost:3000/api/board/${postId}/comments/${commentToDelete.id}`,
           {
             method: 'DELETE',
           }

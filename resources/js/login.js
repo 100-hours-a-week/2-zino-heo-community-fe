@@ -1,8 +1,3 @@
-require('dotenv').config();
-
-// 환경 변수에서 EC2 퍼블릭 IP 주소를 가져옴
-const EC2_PUBLIC_IP = process.env.EC2_PUBLIC_IP;
-
 const loginButton = document.querySelector('.login-btn');
 
 // DOMContentLoaded 이벤트를 사용하여 DOM이 완전히 로드된 후 실행
@@ -42,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // 서버에 로그인 요청
       try {
-        const response = await fetch(`${EC2_PUBLIC_IP}/api/auth/login`, {
+        const response = await fetch('http://localhost:3000/api/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

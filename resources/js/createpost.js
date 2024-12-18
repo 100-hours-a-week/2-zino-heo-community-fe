@@ -1,8 +1,3 @@
-require('dotenv').config();
-
-// 환경 변수에서 EC2 퍼블릭 IP 주소를 가져옴
-const EC2_PUBLIC_IP = process.env.EC2_PUBLIC_IP;
-
 document.addEventListener('DOMContentLoaded', function () {
   const titleInput = document.getElementById('title'); // 제목 입력란
   const contentInput = document.getElementById('content'); // 본문 입력란
@@ -75,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       // POST 요청 보내기
-      fetch(`${EC2_PUBLIC_IP}/api/board/create`, {
+      fetch('http://localhost:3000/api/board/create', {
         method: 'POST',
         body: formData,
       })

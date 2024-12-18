@@ -1,8 +1,3 @@
-require('dotenv').config();
-
-// 환경 변수에서 EC2 퍼블릭 IP 주소를 가져옴
-const EC2_PUBLIC_IP = process.env.EC2_PUBLIC_IP;
-
 document.addEventListener('DOMContentLoaded', function () {
   const imagePlaceholder = document.getElementById('imagePlaceholder');
   const imageUpload = document.getElementById('imageUpload');
@@ -84,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
       formData.append('profileImage', imageFile); // Multer 방식으로 이미지 파일을 추가
     }
     // Fetch API를 사용하여 POST 요청 보내기
-    fetch(`${EC2_PUBLIC_IP}/api/users/register`, {
+    fetch('http://localhost:3000/api/users/register', {
       method: 'POST',
       body: formData, // FormData 객체 전송
     })
