@@ -1,3 +1,8 @@
+require('dotenv').config();
+
+// 환경 변수에서 EC2 퍼블릭 IP 주소를 가져옴
+const EC2_PUBLIC_IP = process.env.EC2_PUBLIC_IP;
+
 // 비밀번호 헬퍼 텍스트 요소
 const passwordInput = document.getElementById('password');
 const confirmPasswordInput = document.getElementById('confirm-password');
@@ -76,7 +81,7 @@ signupButton.addEventListener('click', function () {
     const newPassword = passwordInput.value.trim(); // 새 비밀번호
 
     // PUT 요청 보내기
-    fetch('http://localhost:3000/api/users/password/update-password', {
+    fetch(`${EC2_PUBLIC_IP}/api/users/password/update-password`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

@@ -1,3 +1,8 @@
+require('dotenv').config();
+
+// 환경 변수에서 EC2 퍼블릭 IP 주소를 가져옴
+const EC2_PUBLIC_IP = process.env.EC2_PUBLIC_IP;
+
 // 드롭다운 메뉴 이벤트를 설정하는 함수
 function setupDropdownMenu() {
   const dropdownItems = document.querySelectorAll('.dropdown-item');
@@ -35,7 +40,7 @@ function setProfileImage() {
 
   if (user && user.profileImage) {
     // 프로필 이미지가 존재하는 경우
-    setImage(`http://localhost:3000/${user.profileImage}`);
+    setImage(`${EC2_PUBLIC_IP}/${user.profileImage}`);
   } else {
     // 프로필 이미지가 없을 경우 기본 이미지 설정
     const defaultImageUrl =

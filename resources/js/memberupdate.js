@@ -1,3 +1,8 @@
+require('dotenv').config();
+
+// 환경 변수에서 EC2 퍼블릭 IP 주소를 가져옴
+const EC2_PUBLIC_IP = process.env.EC2_PUBLIC_IP;
+
 document.addEventListener('DOMContentLoaded', function () {
   const nicknameInput = document.getElementById('nickname');
   const helperText = document.createElement('small');
@@ -33,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 프로필 이미지 설정
     if (profileImage) {
-      profileImageElement.src = `http://localhost:3000/${profileImage}`; // 기존 프로필 이미지 URL 설정
+      profileImageElement.src = `${EC2_PUBLIC_IP}/${profileImage}`; // 기존 프로필 이미지 URL 설정
       profileImageElement.style.display = 'block'; // 이미지 표시
       imagePlaceholder.appendChild(profileImageElement); // 이미지 플레이스홀더에 추가
     } else {
@@ -57,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // 닉네임 중복 검사
   function checkNicknameAvailability(nickname) {
     return fetch(
-      `http://localhost:3000/api/users/check-nickname?nickname=${nickname}`
+      `${EC2_PUBLIC_IP}/api/users/check-nickname?nickname=${nickname}`
     )
       .then((response) => {
         if (!response.ok) {
@@ -104,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // API 요청
-    fetch('http://localhost:3000/api/users/update', {
+    fetch(`${EC2_PUBLIC_IP}/api/users/update`, {
       method: 'PUT',
       body: formData, // FormData 객체 전송
     })
@@ -124,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('user', JSON.stringify(updatedUser)); // 로컬 스토리지에 저장
 
         // 프로필 이미지 업데이트
-        profileImageElement.src = `http://localhost:3000/${updatedUser.profileImage}`; // 새로운 프로필 이미지로 업데이트
+        profileImageElement.src = `${EC2_PUBLIC_IP}/${updatedUser.profileImage}`; // 새로운 프로필 이미지로 업데이트
         profileImageElement.style.display = 'block'; // 이미지 표시
         showToastMessage('회원 정보가 수정되었습니다.');
         console.log(data);
@@ -194,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const email = user.email; // 로컬 스토리지에서 가져온 이메일
 
           // DELETE 요청 보내기
-          fetch(`http://localhost:3000/api/users/delete`, {
+          fetch(`${EC2_PUBLIC_IP}/api/users/delete`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',

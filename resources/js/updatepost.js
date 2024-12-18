@@ -1,3 +1,8 @@
+require('dotenv').config();
+
+// 환경 변수에서 EC2 퍼블릭 IP 주소를 가져옴
+const EC2_PUBLIC_IP = process.env.EC2_PUBLIC_IP;
+
 document.addEventListener('DOMContentLoaded', async function () {
   const titleInput = document.getElementById('title');
   const contentInput = document.getElementById('content');
@@ -12,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     console.log('게시글 ID:', postId); // ID 확인
 
     const response = await fetch(
-      `http://localhost:3000/api/board/${postId}/update`
+      `${EC2_PUBLIC_IP}/api/board/${postId}/update`
     );
     if (!response.ok) {
       throw new Error('게시글을 불러오는 데 실패했습니다.');
@@ -77,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         const response = await fetch(
-          `http://localhost:3000/api/board/${postId}/postupdate`,
+          `${EC2_PUBLIC_IP}/api/board/${postId}/postupdate`,
           {
             method: 'PATCH',
             body: formData, // FormData를 요청 본문으로 전송
