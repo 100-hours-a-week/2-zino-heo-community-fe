@@ -35,7 +35,7 @@ function setProfileImage() {
 
   if (user && user.profileImage) {
     // 프로필 이미지가 존재하는 경우
-    setImage(`http://localhost:3000/${user.profileImage}`);
+    setImage(`${window.API_BASE_URL}/${user.profileImage}`);
   } else {
     // 프로필 이미지가 없을 경우 기본 이미지 설정
     const defaultImageUrl =

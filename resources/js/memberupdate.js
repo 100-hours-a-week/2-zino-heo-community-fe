@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 프로필 이미지 설정
     if (profileImage) {
-      profileImageElement.src = `http://localhost:3000/${profileImage}`; // 기존 프로필 이미지 URL 설정
+      profileImageElement.src = `${window.API_BASE_URL}/${profileImage}`; // 기존 프로필 이미지 URL 설정
       profileImageElement.style.display = 'block'; // 이미지 표시
       imagePlaceholder.appendChild(profileImageElement); // 이미지 플레이스홀더에 추가
     } else {
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // 닉네임 중복 검사
   function checkNicknameAvailability(nickname) {
     return fetch(
-      `http://localhost:3000/api/users/check-nickname?nickname=${nickname}`
+      `${window.API_BASE_URL}/api/users/check-nickname?nickname=${nickname}`
     )
       .then((response) => {
         if (!response.ok) {
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // API 요청
-    fetch('http://localhost:3000/api/users/update', {
+    fetch(`${window.API_BASE_URL}/api/users/update`, {
       method: 'PUT',
       body: formData, // FormData 객체 전송
     })
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('user', JSON.stringify(updatedUser)); // 로컬 스토리지에 저장
 
         // 프로필 이미지 업데이트
-        profileImageElement.src = `http://localhost:3000/${updatedUser.profileImage}`; // 새로운 프로필 이미지로 업데이트
+        profileImageElement.src = `${window.API_BASE_URL}/${updatedUser.profileImage}`; // 새로운 프로필 이미지로 업데이트
         profileImageElement.style.display = 'block'; // 이미지 표시
         showToastMessage('회원 정보가 수정되었습니다.');
         console.log(data);
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const email = user.email; // 로컬 스토리지에서 가져온 이메일
 
           // DELETE 요청 보내기
-          fetch(`http://localhost:3000/api/users/delete`, {
+          fetch(`${window.API_BASE_URL}/api/users/delete`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',

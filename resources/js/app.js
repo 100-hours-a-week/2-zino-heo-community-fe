@@ -26,7 +26,7 @@ app.post('/api/auth/register', (req, res) => {
   // 더미 데이터에 사용자 추가 로직
   // 예: 사용자 배열에 추가하거나 JSON 파일에 저장하는 로직
 
-  res.status(201).json({ message: '회원가입에 성공했습니다!' });
+  res.status(201).json({ message: 'User registered successfully.' });
 });
 
 app.listen(PORT, () => {

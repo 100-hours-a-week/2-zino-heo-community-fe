@@ -76,7 +76,7 @@ signupButton.addEventListener('click', function () {
     const newPassword = passwordInput.value.trim(); // 새 비밀번호
 
     // PUT 요청 보내기
-    fetch('http://localhost:3000/api/users/password/update-password', {
+    fetch(`${window.API_BASE_URL}/api/users/password/update-password`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

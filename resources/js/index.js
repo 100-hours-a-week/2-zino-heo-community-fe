@@ -7,7 +7,7 @@ const postContainer = document.getElementById('postContainer'); // 게시물 리
 
 // 게시물 목록 가져오기
 function loadPosts() {
-  fetch('http://localhost:3000/api/board') // 게시물 목록 API 호출
+  fetch(`${window.API_BASE_URL}/api/board`) // 게시물 목록 API 호출
     .then((response) => {
       if (!response.ok) {
         throw new Error('게시물 목록을 가져오는 중 오류가 발생했습니다.');
@@ -31,7 +31,7 @@ function displayPosts(posts) {
   posts.forEach((post) => {
     const profileImageUrl = post.author.profileImage.startsWith('http')
       ? post.author.profileImage
-      : `http://localhost:3000/${post.author.profileImage}`; // URL 수정
+      : `${window.API_BASE_URL}/${post.author.profileImage}`; // URL 수정
 
     const postElement = document.createElement('div');
     postElement.classList.add('posting');

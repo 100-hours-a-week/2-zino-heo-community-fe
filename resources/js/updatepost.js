@@ -11,9 +11,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const postId = urlParams.get('postId'); // postId 가져오기
     console.log('게시글 ID:', postId); // ID 확인
 
-    const response = await fetch(
-      `http://localhost:3000/api/board/${postId}/update`
-    );
+    const response = await fetch(`${window.API_BASE_URL}/api/board/${postId}/update`);
     if (!response.ok) {
       throw new Error('게시글을 불러오는 데 실패했습니다.');
     }
@@ -77,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         const response = await fetch(
-          `http://localhost:3000/api/board/${postId}/postupdate`,
+          `${window.API_BASE_URL}/api/board/${postId}/postupdate`,
           {
             method: 'PATCH',
             body: formData, // FormData를 요청 본문으로 전송

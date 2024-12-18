@@ -78,8 +78,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (imageFile) {
       formData.append('profileImage', imageFile); // Multer 방식으로 이미지 파일을 추가
     }
+    console.log(`${window.API_BASE_URL}/api/users/register`); // URL 로그
     // Fetch API를 사용하여 POST 요청 보내기
-    fetch('http://localhost:3000/api/users/register', {
+    fetch(`${window.API_BASE_URL}/api/users/register`, {
       method: 'POST',
       body: formData, // FormData 객체 전송
     })

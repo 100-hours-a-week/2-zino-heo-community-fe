@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       // POST 요청 보내기
-      fetch('http://localhost:3000/api/board/create', {
+      fetch(`${window.API_BASE_URL}/api/board/create`, {
         method: 'POST',
         body: formData,
       })
