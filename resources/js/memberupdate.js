@@ -77,6 +77,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const nicknameValue = nicknameInput.value.trim();
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+    const currentNickname = currentUser ? currentUser.nickname : '';
+
+    // 현재 닉네임과 입력한 닉네임이 동일한 경우
+    if (nicknameValue === currentNickname) {
+      // 닉네임을 변경하지 않으므로 사용자 정보 업데이트 호출
+      updateUserInfo(currentUser.email);
+      return;
+    }
+
     checkNicknameAvailability(nicknameValue)
       .then((isAvailable) => {
         if (!isAvailable) {
@@ -95,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const nickname = nicknameInput.value.trim();
     const formData = new FormData();
     formData.append('email', email); // 이메일 추가
-    formData.append('nickname', nickname); // 닉네임 추가
+    formData.append('nickname', nickname);
 
     // 프로필 이미지 데이터 추가 (Multer 방식)
     if (imageUpload.files.length > 0) {
