@@ -56,6 +56,12 @@ document.addEventListener('DOMContentLoaded', function () {
     .then((data) => {
       document.getElementById('header-container').innerHTML = data;
 
+      // 로고 클릭 이벤트 추가
+      const logoElement = document.getElementById('logo');
+      logoElement.addEventListener('click', function () {
+        window.location.href = '../../views/main/index.html'; // index.html로 이동
+      });
+
       // 헤더가 로드된 후 드롭다운 메뉴 설정
       setupDropdownMenu();
 

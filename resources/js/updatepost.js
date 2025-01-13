@@ -6,12 +6,17 @@ document.addEventListener('DOMContentLoaded', async function () {
   const submitButton = document.querySelector('.submit-button');
   const helperText = document.getElementById('helper-text');
 
+  // 헬퍼 텍스트 초기 상태 숨김
+  helperText.style.display = 'none';
+
   try {
     const urlParams = new URLSearchParams(window.location.search);
     const postId = urlParams.get('postId'); // postId 가져오기
     console.log('게시글 ID:', postId); // ID 확인
 
-    const response = await fetch(`${window.API_BASE_URL}/api/board/${postId}/update`);
+    const response = await fetch(
+      `${window.API_BASE_URL}/api/board/${postId}/update`
+    );
     if (!response.ok) {
       throw new Error('게시글을 불러오는 데 실패했습니다.');
     }
@@ -27,10 +32,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     alert(error.message);
   }
 
+  // 업로드 버튼 클릭 시 이미지 파일 입력 트리거
+  uploadButton.addEventListener('click', function () {
+    imageInput.click(); // 이미지 파일 입력 클릭
+  });
+
   imageInput.addEventListener('change', function () {
     const file = imageInput.files[0];
     if (file) {
-      uploadButton.nextElementSibling.textContent = file.name;
+      uploadButton.nextElementSibling.textContent = file.name; // 선택한 파일 이름 표시
+    } else {
+      uploadButton.nextElementSibling.textContent = '이미지 파일을 선택하세요.'; // 기본 텍스트
     }
   });
 
@@ -47,11 +59,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   function checkInput() {
     if (!titleInput.value || !contentInput.value) {
-      helperText.style.display = 'block';
-      submitButton.style.backgroundColor = '#ACA0EB';
+      helperText.style.display = 'block'; // 헬퍼 텍스트 표시
+      submitButton.style.backgroundColor = '#ACA0EB'; // 비활성화 색상
     } else {
-      helperText.style.display = 'none';
-      submitButton.style.backgroundColor = '#7F6AEE';
+      helperText.style.display = 'none'; // 헬퍼 텍스트 숨김
+      submitButton.style.backgroundColor = '#7F6AEE'; // 활성화 색상
     }
   }
 
