@@ -27,7 +27,9 @@ document.addEventListener('DOMContentLoaded', async function () {
       const urlParams = new URLSearchParams(window.location.search);
       postId = urlParams.get('postId'); // postId 가져오기
 
-      const response = await fetch(`${window.API_BASE_URL}/api/board/${postId}`); // 백엔드 API 호출
+      const response = await fetch(
+        `${window.API_BASE_URL}/api/board/${postId}`
+      ); // 백엔드 API 호출
       if (!response.ok) {
         throw new Error('게시물을 찾을 수 없습니다.');
       }
@@ -37,7 +39,13 @@ document.addEventListener('DOMContentLoaded', async function () {
       // 게시물 정보 화면에 표시
       document.querySelector('.post-title').textContent = post.title;
       document.querySelector('.post-content').textContent = post.content;
-      document.querySelector('.post-image img').src = `${window.API_BASE_URL}/${post.image}`; // 게시물 이미지 경로
+      const postImageElement = document.querySelector('.post-image img');
+      if (post.image) {
+        postImageElement.src = `${window.API_BASE_URL}/${post.image}`; // 게시물 이미지 경로
+        postImageElement.style.display = 'block'; // 이미지를 보이게 설정
+      } else {
+        postImageElement.style.display = 'none'; // 이미지를 숨김
+      }
       const authorPic = document.querySelector('.author-pic');
       authorPic.style.backgroundImage = `url(${window.API_BASE_URL}/${post.author.profileImage})`; // 프로필 이미지 경로
       document.querySelector('.author').textContent = post.author.nickname; // 작성자 닉네임 설정
@@ -82,11 +90,14 @@ document.addEventListener('DOMContentLoaded', async function () {
       likeButton.addEventListener('click', async () => {
         const email = JSON.parse(localStorage.getItem('user')).email;
         try {
-          const response = await fetch(`${window.API_BASE_URL}/api/board/${postId}/like`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email }),
-          });
+          const response = await fetch(
+            `${window.API_BASE_URL}/api/board/${postId}/like`,
+            {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email }),
+            }
+          );
 
           if (response.ok) {
             const data = await response.json();
@@ -180,6 +191,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             editingComment = null; // 수정 상태 초기화
             submitCommentButton.textContent = '댓글 등록'; // 버튼 텍스트 변경
             commentInput.value = ''; // 입력 필드 초기화
+            window.location.reload(); // 수정된 댓글을 반영하기 위해 페이지 새로고침
           } else {
             const errorMessage = await response.text();
             alert(`댓글 수정에 문제가 발생했습니다: ${errorMessage}`);
@@ -246,9 +258,12 @@ document.addEventListener('DOMContentLoaded', async function () {
   // 게시글 삭제 확인 버튼 클릭 시 처리
   confirmPostDeleteButton.addEventListener('click', async function () {
     try {
-      const response = await fetch(`${window.API_BASE_URL}/api/board/${postId}/delete`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `${window.API_BASE_URL}/api/board/${postId}/delete`,
+        {
+          method: 'DELETE',
+        }
+      );
 
       if (response.ok) {
         alert('게시글이 삭제되었습니다!');

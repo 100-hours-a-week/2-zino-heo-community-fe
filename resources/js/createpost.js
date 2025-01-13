@@ -39,7 +39,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 입력 유효성 체크 함수
   function checkInput() {
-    if (!titleInput.value || !contentInput.value) {
+    const titleTrimmed = titleInput.value.trim();
+    const contentTrimmed = contentInput.value.trim();
+
+    if (!titleTrimmed || !contentTrimmed) {
       helperText.style.display = 'block'; // 헬퍼 텍스트 표시
       submitButton.style.backgroundColor = '#ACA0EB'; // 비활성화 색상
     } else {
@@ -50,10 +53,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 완료 버튼 클릭 시 처리
   submitButton.addEventListener('click', function () {
-    if (titleInput.value && contentInput.value) {
+    const titleTrimmed = titleInput.value.trim();
+    const contentTrimmed = contentInput.value.trim();
+
+    if (titleTrimmed && contentTrimmed) {
       const formData = new FormData(); // FormData 객체 생성
-      formData.append('title', titleInput.value); // 제목 추가
-      formData.append('content', contentInput.value); // 내용 추가
+      formData.append('title', titleTrimmed); // 제목 추가
+      formData.append('content', contentTrimmed); // 내용 추가
       if (imageInput.files[0]) {
         formData.append('image', imageInput.files[0]); // 이미지 파일 추가
       }
