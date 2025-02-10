@@ -72,20 +72,28 @@ signupButton.addEventListener('click', function () {
     confirmPasswordHelperText.textContent === '';
 
   if (isValid) {
-    const email = JSON.parse(localStorage.getItem('user')).email; // 로컬 스토리지에서 이메일 가져오기
-    const newPassword = passwordInput.value.trim(); // 새 비밀번호
+    fetchUserInfo() // 사용자 정보 가져오기
+      .then((user) => {
+        const email = user ? user.email : ''; // 사용자 이메일
 
-    // PUT 요청 보내기
-    fetch(`${window.API_BASE_URL}/api/users/password/update-password`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email, // 사용자 이메일
-        password: newPassword, // 새 비밀번호
-      }),
-    })
+        const newPassword = passwordInput.value.trim(); // 새 비밀번호
+
+        // PUT 요청 보내기
+        return fetch(
+          `${window.API_BASE_URL}/api/users/password/update-password`,
+          {
+            method: 'PUT',
+            credentials: 'include', // 쿠키를 포함하여 요청
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: email, // 사용자 이메일
+              password: newPassword, // 새 비밀번호
+            }),
+          }
+        );
+      })
       .then((response) => {
         if (!response.ok) {
           throw new Error('비밀번호 수정 중 오류가 발생했습니다.');
@@ -94,7 +102,6 @@ signupButton.addEventListener('click', function () {
       })
       .then((data) => {
         showToastMessage('비밀번호가 수정되었습니다.'); // 성공 메시지
-        localStorage.removeItem('user'); // 로컬 스토리지에서 사용자 정보 삭제
         window.location.href = '../../views/member/login.html'; // 로그인 페이지로 리다이렉트
       })
       .catch((error) => {

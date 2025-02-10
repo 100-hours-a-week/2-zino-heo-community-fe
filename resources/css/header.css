@@ -53,6 +53,7 @@ html, body {
   right: calc(50% - 300px); /* 로고에서 300px 오른쪽 */
   top: 50%; /* 세로 중앙 정렬 */
   transform: translateY(-50%); /* 요소의 높이의 절반만큼 위로 이동 */
+  background-position: center;
 }
 
 /* 드롭다운 메뉴 스타일링 */

@@ -1,9 +1,11 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-
+const dotenv = require('dotenv');
 const app = express();
-const PORT = 8080;
+
+dotenv.config();
+const PORT = process.env.PORT;
 
 // CORS 설정
 app.use(cors());

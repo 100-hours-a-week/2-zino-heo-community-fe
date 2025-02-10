@@ -19,29 +19,36 @@ document.addEventListener('DOMContentLoaded', function () {
   helperText.classList.add('helper-text');
   formGroup.appendChild(helperText);
 
-  // 페이지 로드 시 사용자 정보 설정
-  const user = JSON.parse(localStorage.getItem('user')); // 로컬 스토리지에서 사용자 정보 가져오기
+  let user;
 
-  if (user) {
-    const { email, nickname, profileImage } = user; // 구조 분해 할당
+  // 사용자 정보 가져오기
+  fetchUserInfo()
+    .then((fetchedUser) => {
+      user = fetchedUser; // 사용자 정보를 저장
+      if (user) {
+        const { email, nickname, profileImage } = user; // 구조 분해 할당
 
-    // 이메일 설정
-    document.getElementById('email').textContent = email;
+        // 이메일 설정
+        document.getElementById('email').textContent = email;
 
-    // 닉네임 설정
-    nicknameInput.value = nickname;
+        // 닉네임 설정
+        nicknameInput.value = nickname;
 
-    // 프로필 이미지 설정
-    if (profileImage) {
-      profileImageElement.src = `${window.API_BASE_URL}/${profileImage}`; // 기존 프로필 이미지 URL 설정
-      profileImageElement.style.display = 'block'; // 이미지 표시
-      imagePlaceholder.appendChild(profileImageElement); // 이미지 플레이스홀더에 추가
-    } else {
-      console.error('프로필 이미지 URL이 없습니다.');
-    }
-  } else {
-    console.error('사용자 정보가 로컬 스토리지에 없습니다.');
-  }
+        // 프로필 이미지 설정
+        if (profileImage) {
+          profileImageElement.src = `${window.API_BASE_URL}/${profileImage}`; // 기존 프로필 이미지 URL 설정
+          profileImageElement.style.display = 'block'; // 이미지 표시
+          imagePlaceholder.appendChild(profileImageElement); // 이미지 플레이스홀더에 추가
+        } else {
+          console.error('프로필 이미지 URL이 없습니다.');
+        }
+      } else {
+        console.error('사용자 정보가 없습니다.');
+      }
+    })
+    .catch((error) => {
+      console.error('사용자 정보 로드 중 오류:', error);
+    });
 
   // 닉네임 유효성 검사
   function validateNickname() {
@@ -77,28 +84,30 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const nicknameValue = nicknameInput.value.trim();
-    const currentUser = JSON.parse(localStorage.getItem('user'));
-    const currentNickname = currentUser ? currentUser.nickname : '';
+    fetchUserInfo().then((user) => {
+      const currentNickname = user ? user.nickname : '';
 
-    // 현재 닉네임과 입력한 닉네임이 동일한 경우
-    if (nicknameValue === currentNickname) {
-      // 닉네임을 변경하지 않으므로 사용자 정보 업데이트 호출
-      updateUserInfo(currentUser.email);
-      return;
-    }
+      // 현재 닉네임과 입력한 닉네임이 동일한 경우
+      if (nicknameValue === currentNickname) {
+        // 닉네임을 변경하지 않으므로 사용자 정보 업데이트 호출
+        updateUserInfo(user.email);
+        return;
+      }
 
-    checkNicknameAvailability(nicknameValue)
-      .then((isAvailable) => {
-        if (!isAvailable) {
-          helperText.textContent = '* 중복된 닉네임입니다.';
-        } else {
-          helperText.textContent = ''; // 헬퍼 텍스트 지우기
-          updateUserInfo(user.email); // 사용자 정보 업데이트 호출
-        }
-      })
-      .catch((error) => {
-        helperText.textContent = '오류가 발생했습니다: ' + error.message;
-      });
+      // 중복 검사 호출
+      checkNicknameAvailability(nicknameValue)
+        .then((isAvailable) => {
+          if (!isAvailable) {
+            helperText.textContent = '* 중복된 닉네임입니다.'; // 중복시 메시지 표시
+          } else {
+            helperText.textContent = ''; // 헬퍼 텍스트 지우기
+            updateUserInfo(user.email, nicknameValue); // 사용자 정보 업데이트 호출
+          }
+        })
+        .catch((error) => {
+          helperText.textContent = '오류가 발생했습니다: ' + error.message; // 오류 처리
+        });
+    });
   });
 
   function updateUserInfo(email) {
@@ -117,6 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch(`${window.API_BASE_URL}/api/users/update`, {
       method: 'PUT',
       body: formData, // FormData 객체 전송
+      credentials: 'include', // 쿠키를 포함하여 요청
     })
       .then((response) => {
         if (!response.ok) {
@@ -125,19 +135,32 @@ document.addEventListener('DOMContentLoaded', function () {
         return response.json();
       })
       .then((data) => {
-        // 로컬 스토리지 업데이트
+        // 사용자 정보 업데이트
         const updatedUser = {
           email: data.user.email,
           nickname: data.user.nickname,
           profileImage: data.user.profileImage, // 업데이트된 프로필 이미지
         };
-        localStorage.setItem('user', JSON.stringify(updatedUser)); // 로컬 스토리지에 저장
+
+        // 세션 정보를 업데이트하는 API 호출
+        return fetch(`${window.API_BASE_URL}/api/user/session/update`, {
+          method: 'PUT',
+          credentials: 'include', // 쿠키를 포함하여 요청
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedUser), // 업데이트된 사용자 정보를 JSON 형식으로 전송
+        });
+      })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('세션 정보를 업데이트하는 데 문제가 발생했습니다.');
+        }
 
         // 프로필 이미지 업데이트
-        profileImageElement.src = `${window.API_BASE_URL}/${updatedUser.profileImage}`; // 새로운 프로필 이미지로 업데이트
+        profileImageElement.src = `${window.API_BASE_URL}/${profileImageElement.src}`; // 새로운 프로필 이미지로 업데이트
         profileImageElement.style.display = 'block'; // 이미지 표시
         showToastMessage('회원 정보가 수정되었습니다.');
-        console.log(data);
 
         // index.html로 리다이렉트
         window.location.href = '../../views/main/index.html';
@@ -201,11 +224,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const confirmDeleteButton =
           postDeleteModal.querySelector('#confirmDelete');
         confirmDeleteButton.addEventListener('click', function () {
-          const email = user.email; // 로컬 스토리지에서 가져온 이메일
+          const email = user.email; // 사용자 이메일
 
           // DELETE 요청 보내기
           fetch(`${window.API_BASE_URL}/api/users/delete`, {
             method: 'DELETE',
+            credentials: 'include', // 쿠키를 포함하여 요청
             headers: {
               'Content-Type': 'application/json',
             },
@@ -224,8 +248,8 @@ document.addEventListener('DOMContentLoaded', function () {
               document.body.removeChild(postDeleteModal);
 
               // 로그아웃 후 로그인 페이지로 이동
-              localStorage.removeItem('user'); // 로컬 스토리지에서 사용자 정보 삭제
-              window.location.href = '../../views/member/login.html'; // 게시글 삭제 후 이동
+              document.cookie = 'user=; path=/; max-age=0'; // 쿠키에서 사용자 정보 삭제
+              window.location.href = '../../views/member/login.html'; // 로그인 페이지로 이동
             })
             .catch((error) => {
               alert(error.message); // 오류 메시지 표시

@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', async function () {
           {
             method: 'PATCH',
             body: formData, // FormData를 요청 본문으로 전송
+            credentials: 'include', // 쿠키를 포함하여 요청
           }
         );
 

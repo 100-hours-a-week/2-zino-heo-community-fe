@@ -34,6 +34,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const loginLink = document.getElementById('login-link');
   signupButton.disabled = true;
 
+  loginLink.addEventListener('click', function (event) {
+    event.preventDefault(); // 기본 링크 동작 방지
+    window.location.href = '../../views/member/login.html'; // 로그인 페이지로 이동
+  });
+
   const redirectToLogin = function (event) {
     event.preventDefault(); // 기본 동작 방지
     window.location.href = 'login.html'; // 로그인 페이지로 이동
@@ -49,21 +54,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const nickname = nicknameInput.value.trim();
     const imageFile = imageUpload.files[0];
 
-    // // 프로필 이미지 처리
-    // let profileImage = '';
-    // if (imageFile) {
-    //   const reader = new FileReader();
-    //   reader.onloadend = function () {
-    //     profileImage = reader.result; // base64 인코딩된 이미지
-    //     sendData(); // 이미지 로드 후 데이터 전송
-    //   };
-    //   reader.readAsDataURL(imageFile);
-    // } else {
-    //   sendData(); // 이미지가 없을 때 바로 데이터 전송
-    // }
-    //async function sendData() {
-
-    // POST 요청 보내는 함수
     // 비밀번호 확인
     if (password !== confirmPassword) {
       alert('비밀번호가 일치하지 않습니다.');

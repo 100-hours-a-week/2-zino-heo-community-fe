@@ -89,6 +89,8 @@ body {
 .post-content {
   margin: 20px 0; /* 내용 여백 */
   line-height: 1.6; /* 줄 간격 */
+  overflow-wrap: break-word; /* 긴 단어를 줄 바꿈 */
+  white-space: pre-wrap; /* 개행 및 공백을 유지 */
 }
 
 .post-stats {
@@ -199,6 +201,7 @@ body {
 .comment-content {
   margin: 10px 0; /* 여백 */
   margin-left: 47px;
+  white-space: pre-wrap; /* 개행 및 공백을 유지 */
 }
 
 .comment-buttons {
