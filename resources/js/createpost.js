@@ -39,10 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 입력 유효성 체크 함수
   function checkInput() {
-    const titleTrimmed = titleInput.value.trim();
-    const contentTrimmed = contentInput.value.trim();
-
-    if (!titleTrimmed || !contentTrimmed) {
+    if (!titleInput.value || !contentInput.value) {
       helperText.style.display = 'block'; // 헬퍼 텍스트 표시
       submitButton.style.backgroundColor = '#ACA0EB'; // 비활성화 색상
     } else {
@@ -53,33 +50,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 완료 버튼 클릭 시 처리
   submitButton.addEventListener('click', function () {
-    const titleTrimmed = titleInput.value.trim();
-    const contentTrimmed = contentInput.value.trim();
-
-    if (titleTrimmed && contentTrimmed) {
+    if (titleInput.value && contentInput.value) {
       const formData = new FormData(); // FormData 객체 생성
-      formData.append('title', titleTrimmed); // 제목 추가
-      formData.append('content', contentTrimmed); // 내용 추가
+      formData.append('title', titleInput.value); // 제목 추가
+      formData.append('content', contentInput.value); // 내용 추가
       if (imageInput.files[0]) {
         formData.append('image', imageInput.files[0]); // 이미지 파일 추가
       }
 
-      // 로컬 스토리지에서 작성자 정보 가져오기
-      const userInfo = JSON.parse(localStorage.getItem('user')); // 로컬 스토리지에서 사용자 정보 가져오기
-      if (userInfo) {
-        formData.append('authorEmail', userInfo.email);
-        formData.append('authorNickname', userInfo.nickname); // 작성자 닉네임
-        formData.append('authorProfileImage', userInfo.profileImage); // 작성자 프로필 사진 URL
-      } else {
-        alert('사용자 정보가 없습니다.'); // 사용자 정보가 없는 경우 경고
-        return;
-      }
+      // 사용자 정보 가져오기
+      fetchUserInfo()
+        .then((userInfo) => {
+          if (userInfo) {
+            formData.append('authorEmail', userInfo.email);
+            formData.append('authorNickname', userInfo.nickname); // 작성자 닉네임
+            formData.append('authorProfileImage', userInfo.profileImage); // 작성자 프로필 사진 URL
+          } else {
+            alert('사용자 정보가 없습니다.'); // 사용자 정보가 없는 경우 경고
+            return;
+          }
 
-      // POST 요청 보내기
-      fetch(`${window.API_BASE_URL}/api/board/create`, {
-        method: 'POST',
-        body: formData,
-      })
+          // POST 요청 보내기
+          return fetch(`${window.API_BASE_URL}/api/board/create`, {
+            method: 'POST',
+            body: formData,
+            credentials: 'include', // 쿠키를 포함하여 요청
+          });
+        })
         .then((response) => {
           if (!response.ok) {
             throw new Error('게시물 작성 중 오류가 발생했습니다.');

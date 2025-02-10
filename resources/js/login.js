@@ -43,20 +43,12 @@ document.addEventListener('DOMContentLoaded', function () {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ email, password }), // 이메일과 비밀번호 전송
+          credentials: 'include', // 쿠키를 포함하여 요청
         });
 
         if (response.ok) {
           const data = await response.json();
           console.log('로그인 성공:', data);
-          // 로그인 성공 후 사용자 정보를 로컬 스토리지에 저장
-          localStorage.setItem(
-            'user',
-            JSON.stringify({
-              email: data.user.email,
-              nickname: data.user.nickname,
-              profileImage: data.user.profileImage, // 프로필 이미지 포함
-            })
-          );
           window.location.href = '../../views/main/index.html'; // 대시보드 페이지로 이동
         } else {
           const errorData = await response.json();

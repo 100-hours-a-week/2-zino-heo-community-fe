@@ -42,19 +42,6 @@ html, body {
   transform: translateX(-50%); /* 요소의 너비의 절반만큼 왼쪽으로 이동 */
 }
 
-/* 프로필 사진 스타일 */
-.profile-pic {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%; /* 둥글게 */
-  background-color: #ccc; /* 기본 배경색 */
-  cursor: pointer; /* 클릭 가능하도록 커서 변경 */
-  position: absolute; /* 절대 위치 설정 */
-  right: calc(50% - 300px); /* 로고에서 300px 오른쪽 */
-  top: 50%; /* 세로 중앙 정렬 */
-  transform: translateY(-50%); /* 요소의 높이의 절반만큼 위로 이동 */
-}
-
 /* 드롭다운 메뉴 스타일링 */
 .dropdown-menu {
   display: none; /* 기본적으로 드롭다운 숨김 */

@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   let editingComment = null; // 수정할 댓글 저장
   let currentCommentId = null; // 현재 수정 중인 댓글의 ID 저장
   let commentToDelete; // 삭제할 댓글 저장
+  let currentUser; // 현재 사용자 정보를 저장할 전역 변수
 
   // 게시글 삭제 모달
   const postDeleteModal = document.getElementById('postDeleteModal');
@@ -39,6 +40,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       // 게시물 정보 화면에 표시
       document.querySelector('.post-title').textContent = post.title;
       document.querySelector('.post-content').textContent = post.content;
+
       const postImageElement = document.querySelector('.post-image img');
       if (post.image) {
         postImageElement.src = `${window.API_BASE_URL}/${post.image}`; // 게시물 이미지 경로
@@ -46,9 +48,19 @@ document.addEventListener('DOMContentLoaded', async function () {
       } else {
         postImageElement.style.display = 'none'; // 이미지를 숨김
       }
+
       const authorPic = document.querySelector('.author-pic');
-      authorPic.style.backgroundImage = `url(${window.API_BASE_URL}/${post.author.profileImage})`; // 프로필 이미지 경로
-      document.querySelector('.author').textContent = post.author.nickname; // 작성자 닉네임 설정
+      const defaultProfileImage =
+        'https://dimg.donga.com/wps/ECONOMY/IMAGE/2018/10/18/92452237.2.jpg'; // 기본 이미지 URL
+
+      // 프로필 이미지 설정
+      if (post.author_profileImage) {
+        authorPic.style.backgroundImage = `url(${window.API_BASE_URL}/${post.author_profileImage})`; // 프로필 이미지 경로
+      } else {
+        authorPic.style.backgroundImage = `url(${defaultProfileImage})`; // 기본 이미지로 설정
+      }
+
+      document.querySelector('.author').textContent = post.author_nickname; // 작성자 닉네임 설정
       document.querySelector('.date').textContent = formatDate(
         new Date(post.createdAt)
       ); // 작성일 설정
@@ -56,46 +68,48 @@ document.addEventListener('DOMContentLoaded', async function () {
       // 좋아요, 조회수, 댓글 수 업데이트
       document.querySelector(
         '.stat-button:nth-child(1) b'
-      ).innerHTML = `${post.likes.length}<br />좋아요`;
+      ).innerHTML = `${post.likeCount}<br />좋아요`;
       document.querySelector(
         '.stat-button:nth-child(2) b'
       ).innerHTML = `${post.views}<br />조회수`;
       document.querySelector(
         '.stat-button:nth-child(3) b'
-      ).innerHTML = `${post.comments.length}<br />댓글`;
+      ).innerHTML = `${post.commentsCount}<br />댓글`;
 
-      const currentUserEmail = JSON.parse(localStorage.getItem('user')).email;
+      // 현재 사용자의 정보를 가져오기
+      currentUser = await fetchUserInfo(); // 사용자 정보를 전역 변수에 저장
 
       const editButton = document.querySelector('.edit-button');
       const deleteButton = document.querySelector('.delete-button');
 
       // 작성자와 현재 사용자가 같은지 확인
-      if (post.author.email === currentUserEmail) {
+      if (post.author_email === currentUser.email) {
         // 작성자일 경우 버튼을 보이도록 설정
-        editButton.style.display = 'inline-block'; // 또는 editButton.classList.remove('hidden');
-        deleteButton.style.display = 'inline-block'; // 또는 deleteButton.classList.remove('hidden');
+        editButton.style.display = 'inline-block';
+        deleteButton.style.display = 'inline-block';
       } else {
         // 작성자가 아닐 경우 버튼을 숨김
         editButton.style.display = 'none';
         deleteButton.style.display = 'none';
       }
+      console.log(post.comments); // 댓글 배열 확인
 
       // 댓글 목록 표시
-      post.comments.forEach((comment) => {
-        displayComment(comment);
-      });
+      for (const comment of post.comments) {
+        await displayComment(comment); // 비동기로 댓글 표시
+      }
 
       // 좋아요 버튼 클릭 시 이벤트 리스너 등록
       const likeButton = document.querySelector('.stat-button:nth-child(1)');
       likeButton.addEventListener('click', async () => {
-        const email = JSON.parse(localStorage.getItem('user')).email;
         try {
           const response = await fetch(
             `${window.API_BASE_URL}/api/board/${postId}/like`,
             {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email }),
+              body: JSON.stringify({ email: currentUser.email }),
+              credentials: 'include', // 쿠키를 포함하여 요청
             }
           );
 
@@ -117,29 +131,31 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   // 댓글을 화면에 추가하는 함수
-  function displayComment(comment) {
+  async function displayComment(comment) {
     const commentItem = document.createElement('div');
     commentItem.classList.add('comment-item');
     commentItem.dataset.commentId = comment.id; // 댓글 ID 저장
-    const profileImageUrl = `${window.API_BASE_URL}/${comment.author.profileImage}`;
-
-    // 현재 로그인한 사용자 정보 가져오기
-    const currentUserEmail = JSON.parse(localStorage.getItem('user')).email;
+    const defaultImageUrl =
+      'https://dimg.donga.com/wps/ECONOMY/IMAGE/2018/10/18/92452237.2.jpg';
+    const profileImageUrl = comment.author_profile_image
+      ? `${window.API_BASE_URL}/${comment.author_profile_image}`
+      : defaultImageUrl;
+    console.log('Profile Image URL:', profileImageUrl);
 
     commentItem.innerHTML = `
       <div class="comment-header">
         <div class="author-info">
           <div class="author-pic" style="background-image: url(${profileImageUrl});"></div>
-          <span class="comment-author">${comment.author.nickname}</span>
+          <span class="comment-author">${comment.author_nickname}</span>
           <span class="comment-date">${formatDate(
             new Date(comment.createdAt)
           )}</span>
           <div class="comment-buttons">
           <button class="edit-comment" style="visibility: ${
-            comment.author.email === currentUserEmail ? 'visible' : 'hidden'
+            comment.author_email === currentUser.email ? 'visible' : 'hidden'
           };">수정</button>
           <button class="delete-comment" style="visibility: ${
-            comment.author.email === currentUserEmail ? 'visible' : 'hidden'
+            comment.author_email === currentUser.email ? 'visible' : 'hidden'
           };">삭제</button>
           </div>
         </div>
@@ -183,6 +199,7 @@ document.addEventListener('DOMContentLoaded', async function () {
               method: 'PATCH',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ content: commentText }), // 수정된 댓글 내용
+              credentials: 'include', // 쿠키를 포함하여 요청
             }
           );
 
@@ -205,9 +222,9 @@ document.addEventListener('DOMContentLoaded', async function () {
           id: Date.now(),
           content: commentText,
           author: {
-            email: JSON.parse(localStorage.getItem('user')).email,
-            nickname: JSON.parse(localStorage.getItem('user')).nickname,
-            profileImage: JSON.parse(localStorage.getItem('user')).profileImage,
+            email: currentUser.email, // 현재 사용자 이메일
+            nickname: currentUser.nickname, // 현재 사용자 닉네임
+            profileImage: currentUser.profileImage, // 현재 사용자 프로필 이미지
           },
           createdAt: new Date().toISOString(),
         };
@@ -220,10 +237,12 @@ document.addEventListener('DOMContentLoaded', async function () {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(newComment),
+              credentials: 'include', // 쿠키를 포함하여 요청
             }
           );
 
           if (response.ok) {
+            location.reload(); // 페이지 새로고침
             const savedComment = await response.json(); // 서버에서 저장된 댓글 가져오기
             displayComment(savedComment); // 댓글 표시
             commentInput.value = ''; // 입력 필드 초기화
@@ -262,6 +281,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         `${window.API_BASE_URL}/api/board/${postId}/delete`,
         {
           method: 'DELETE',
+          credentials: 'include', // 쿠키를 포함하여 요청
         }
       );
 
@@ -292,6 +312,7 @@ document.addEventListener('DOMContentLoaded', async function () {
           `${window.API_BASE_URL}/api/board/${postId}/comments/${commentToDelete.id}`,
           {
             method: 'DELETE',
+            credentials: 'include', // 쿠키를 포함하여 요청
           }
         );
 

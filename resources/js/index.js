@@ -93,13 +93,18 @@ function formatDate(dateString) {
 document.addEventListener('DOMContentLoaded', function () {
   console.log('DOMContentLoaded 이벤트 발생'); // 로그 추가
 
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (!user) {
-    window.location.href = '../../views/member/login.html'; // 로그인 페이지로 이동
-  } else {
-    document.getElementById(
-      'welcomeMessage'
-    ).textContent = `환영합니다, ${user.nickname}님!`;
-    loadPosts(); // 게시물 목록 가져오기
-  }
+  // 사용자 정보를 가져오기
+  fetchUserInfo()
+    .then((user) => {
+      // 사용자의 이메일이 존재하는지 확인
+      if (user && user.email) {
+        loadPosts(); // 게시물 목록 가져오기
+      } else {
+        window.location.href = '../../views/member/login.html'; // 로그인 페이지로 이동
+      }
+    })
+    .catch((error) => {
+      console.error('Error fetching user info:', error);
+      window.location.href = '../../views/member/login.html'; // 로그인 페이지로 이동
+    });
 });
