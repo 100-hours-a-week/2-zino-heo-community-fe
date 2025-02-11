@@ -1,4 +1,4 @@
-FROM node:21-alpine
+FROM node:latest
 WORKDIR /usr/src/app
 
 # package.json과 package-lock.json을 복사
